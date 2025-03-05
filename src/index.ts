@@ -2,23 +2,23 @@ require("dotenv").config();
 
 import "reflect-metadata";
 import express from "express";
-import { AppDataSource } from "./data-source";
+import { AppDataSource } from "./data-source"; // Corrigir a importação do AppDataSource
 
 import cors from "cors";
 
 import userRouter from "./routes/user.routes";
+import authRouter from "./routes/auth.routes";
 
 import { handleError } from "./middlewares/handleError";
-
-import authRouter from "./routes/auth.routes";
 import logger from "./config/winston";
 
 const app = express();
 
-app.use(cors()); // Permite que o express entenda requisições de outros domínios
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-app.use(express.json()); // Permite que o express entenda JSON
-
+// Rotas
 app.use("/users", userRouter);
 app.use("/login", authRouter);
 
@@ -31,12 +31,15 @@ app.get("/env", (req, res) => {
 
 app.use(handleError);
 
+// Inicia a conexão com o banco de dados e o servidor
 AppDataSource.initialize()
   .then(() => {
-    app.listen(process.env.PORT, () => {
+    const port = process.env.PORT || 3000; // Use 3000 como fallback se a variável de ambiente não for definida
+    app.listen(port, () => {
       logger.info(
-        `O servidor está rodando em http://localhost:${process.env.PORT}`
+        `O servidor está rodando em http://localhost:${port}`
       );
     });
   })
-  .catch((error) => console.log(error));
+  .catch((error) => {
+    logger.erro

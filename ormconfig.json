@@ -1,0 +1,14 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "aluisiofs",  
+    "password": "sua_senha",    
+    "database": "postgres",   
+    "entities": [
+      "src/models/*.ts"
+    ],
+    "synchronize": true,
+    "logging": false
+  }
+  
